@@ -5,35 +5,28 @@ using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
 {
-    public GameObject rowPrefab;
+    public GameObject blockPrefab;
     private Grid grid;
     public int levelWidth;
-    private int currentRow;
     public float density;
     public float keyChance;
-    public float shiftRate;
 
     private void Awake()
     {
         grid = GetComponent<Grid>();
-        currentRow = 0;
-        
     }
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextRow();
-        }
+        MakeSquare();
     }
-    public void NextRow()
+    private void MakeSquare()
     {
-        if (GetComponentInChildren<Row>())
+        for (int x = 0; x < levelWidth; x++)
         {
-            GetComponentInChildren<Row>().Place();
+            for (int y = 0; y < levelWidth; y++)
+            {
+                Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, y)), Quaternion.identity, transform);
+            }
         }
-        Instantiate(rowPrefab, grid.CellToWorld(new Vector3Int(0, currentRow)), Quaternion.identity, transform);
-        currentRow++;
-        Camera.main.GetComponent<CameraMovement>().desiredPos += new Vector3(0, grid.cellSize.y + grid.cellGap.y);
     }
 }

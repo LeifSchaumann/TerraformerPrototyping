@@ -268,7 +268,7 @@ Transform:
   m_GameObject: {fileID: 1849564166}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24, y: 10, z: 0}
+  m_LocalPosition: {x: -7.26, y: -7.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -286,11 +286,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a27a3130871df9f4195a06a0b50264a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowPrefab: {fileID: 8171996628617596488, guid: 6c25c9146e31c5f4f923b0f0c0784034, type: 3}
-  levelWidth: 16
+  blockPrefab: {fileID: 8562496135023213370, guid: 5f4dbc4c8ed867e40ac024c9463eca85, type: 3}
+  levelWidth: 5
   density: 0.4
   keyChance: 0.04
-  shiftRate: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

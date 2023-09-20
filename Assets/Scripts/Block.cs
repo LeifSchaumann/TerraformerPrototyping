@@ -16,7 +16,7 @@ public class Block : MonoBehaviour
     {
         tilemap = GetComponentInChildren<Tilemap>();
         grid = GetComponent<Grid>();
-        levelController = transform.parent.parent.GetComponent<LevelController>();
+        levelController = GetComponentInParent<LevelController>();
     }
     private void Start()
     {
