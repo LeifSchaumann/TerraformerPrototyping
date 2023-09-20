@@ -49,10 +49,10 @@ public class Block : MonoBehaviour
             Instantiate(keyPrefab, myGrid.CellToWorld(new Vector3Int(1, 1)) + myGrid.cellSize/2, Quaternion.identity, transform);
         }
     }
-    public void Shift(Vector3Int dir)
+    public void Shift(Vector3Int shift)
     {
         Vector3 cellShift = levelGrid.cellSize + levelGrid.cellGap;
-        desiredPos.x += dir.x * cellShift.x;
-        desiredPos.y += dir.y * cellShift.y;
+        desiredPos.x += shift.x * cellShift.x;
+        desiredPos.y += shift.y * cellShift.y;
     }
 }

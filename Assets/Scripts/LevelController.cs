@@ -24,14 +24,7 @@ public class LevelController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            foreach (Transform child in transform)
-            {
-                Block block = child.GetComponent<Block>();
-                if (block != null )
-                {
-                    block.Shift(new Vector3Int(0, 1));
-                }
-            }
+            ShiftBlocks(GetColumn(2), new Vector3Int(0, 1));
         }
     }
     private void MakeSquare()
@@ -42,6 +35,29 @@ public class LevelController : MonoBehaviour
             {
                 Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, y)), Quaternion.identity, transform);
             }
+        }
+    }
+    private List<Block> GetColumn(int n)
+    {
+        List<Block> column = new List<Block>();
+        foreach (Transform child in transform)
+        {
+            Block block = child.GetComponent<Block>();
+            if (block)
+            {
+                if (grid.WorldToCell(block.transform.position).x == n)
+                {
+                    column.Add(block);
+                }
+            }
+        }
+        return column;
+    }
+    private void ShiftBlocks(List<Block> blocks, Vector3Int shift)
+    {
+        foreach (Block block in blocks)
+        {
+            block.Shift(shift);
         }
     }
 }
