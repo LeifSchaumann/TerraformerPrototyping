@@ -9,12 +9,17 @@ public class LevelController : MonoBehaviour
     public GameObject blockPrefab;
     private Grid grid;
     public int levelWidth;
+    public int levelHeight;
     public float density;
     public float keyChance;
+    private Vector3 cellShift;
+    private float lastShiftTime;
 
     private void Awake()
     {
         grid = GetComponent<Grid>();
+        cellShift = grid.cellSize + grid.cellGap;
+        lastShiftTime = Time.time;
     }
     private void Start()
     {
@@ -22,42 +27,55 @@ public class LevelController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Time.time > lastShiftTime + 0.5f)
         {
-            ShiftBlocks(GetColumn(2), new Vector3Int(0, 1));
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                ShiftColumn(2, 1);
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                ShiftColumn(2, -1);
+            }
         }
     }
     private void MakeSquare()
     {
         for (int x = 0; x < levelWidth; x++)
         {
-            for (int y = 0; y < levelWidth; y++)
+            for (int y = 0; y < levelHeight; y++)
             {
                 Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, y)), Quaternion.identity, transform);
             }
         }
     }
-    private List<Block> GetColumn(int n)
+    private void ShiftColumn(int n, int shift)
     {
-        List<Block> column = new List<Block>();
+        if (shift == 1)
+        {
+            Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(n, -1)), Quaternion.identity, transform);
+        }
+        else if (shift == -1)
+        {
+            Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(n, levelHeight)), Quaternion.identity, transform);
+        }
         foreach (Transform child in transform)
         {
             Block block = child.GetComponent<Block>();
             if (block)
             {
-                if (grid.WorldToCell(block.transform.position).x == n)
+                block.SetPosition();
+                Vector3Int blockGridPos = grid.WorldToCell(block.transform.position);
+                if (blockGridPos.x == n)
                 {
-                    column.Add(block);
+                    block.Shift(new Vector3Int(0, shift));
+                    if ((shift == 1 && blockGridPos.y == levelHeight - 1) || (shift == -1 && blockGridPos.y == 0))
+                    {
+                        block.Fade();
+                    }
                 }
             }
         }
-        return column;
-    }
-    private void ShiftBlocks(List<Block> blocks, Vector3Int shift)
-    {
-        foreach (Block block in blocks)
-        {
-            block.Shift(shift);
-        }
+        lastShiftTime = Time.time;
     }
 }

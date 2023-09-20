@@ -14,8 +14,10 @@ public class Block : MonoBehaviour
     private Grid myGrid;
     private Grid levelGrid;
     private Vector3 desiredPos;
+    public bool doomed;
     private void Awake()
     {
+        doomed = false;
         tilemap = GetComponentInChildren<Tilemap>();
         myGrid = GetComponent<Grid>();
         levelGrid = transform.parent.GetComponent<Grid>();
@@ -28,11 +30,11 @@ public class Block : MonoBehaviour
     }
     private void Update()
     {
-        if (transform.position.y - Camera.main.transform.position.y < -20 || transform.position.x - Camera.main.transform.position.x > 25)
+        if (doomed && Vector3.Distance(transform.position, desiredPos) < 0.01)
         {
             Destroy(gameObject);
         }
-        transform.position = Vector3.Lerp(transform.position, desiredPos, 0.01f);
+        transform.position += (desiredPos - transform.position) * Time.deltaTime * 10;
     }
     public void Generate()
     {
@@ -54,5 +56,23 @@ public class Block : MonoBehaviour
         Vector3 cellShift = levelGrid.cellSize + levelGrid.cellGap;
         desiredPos.x += shift.x * cellShift.x;
         desiredPos.y += shift.y * cellShift.y;
+    }
+    public void SetPosition()
+    {
+        transform.position = desiredPos;
+    }
+    public void SetPosition(Vector3 pos)
+    {
+        desiredPos = pos;
+        transform.position = desiredPos;
+    }
+    public void Fade()
+    {
+        StartCoroutine(FadeRoutine());
+    }
+    IEnumerator FadeRoutine()
+    {
+        yield return new WaitForSeconds(.5f);
+        Destroy(gameObject);
     }
 }
