@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,6 +19,20 @@ public class LevelController : MonoBehaviour
     private void Start()
     {
         MakeSquare();
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach (Transform child in transform)
+            {
+                Block block = child.GetComponent<Block>();
+                if (block != null )
+                {
+                    block.Shift(new Vector3Int(0, 1));
+                }
+            }
+        }
     }
     private void MakeSquare()
     {

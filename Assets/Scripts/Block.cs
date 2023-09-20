@@ -11,12 +11,16 @@ public class Block : MonoBehaviour
     public Tile wallTile;
     public GameObject keyPrefab;
     private LevelController levelController;
-    private Grid grid;
+    private Grid myGrid;
+    private Grid levelGrid;
+    private Vector3 desiredPos;
     private void Awake()
     {
         tilemap = GetComponentInChildren<Tilemap>();
-        grid = GetComponent<Grid>();
+        myGrid = GetComponent<Grid>();
+        levelGrid = transform.parent.GetComponent<Grid>();
         levelController = GetComponentInParent<LevelController>();
+        desiredPos = transform.position;
     }
     private void Start()
     {
@@ -28,6 +32,7 @@ public class Block : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        transform.position = Vector3.Lerp(transform.position, desiredPos, 0.01f);
     }
     public void Generate()
     {
@@ -41,7 +46,13 @@ public class Block : MonoBehaviour
         }
         if (Random.Range(0f, 1f) <= levelController.keyChance)
         {
-            Instantiate(keyPrefab, grid.CellToWorld(new Vector3Int(1, 1)) + grid.cellSize/2, Quaternion.identity, transform);
+            Instantiate(keyPrefab, myGrid.CellToWorld(new Vector3Int(1, 1)) + myGrid.cellSize/2, Quaternion.identity, transform);
         }
+    }
+    public void Shift(Vector3Int dir)
+    {
+        Vector3 cellShift = levelGrid.cellSize + levelGrid.cellGap;
+        desiredPos.x += dir.x * cellShift.x;
+        desiredPos.y += dir.y * cellShift.y;
     }
 }
