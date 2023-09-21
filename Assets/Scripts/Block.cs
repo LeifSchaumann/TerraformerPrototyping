@@ -13,7 +13,7 @@ public class Block : MonoBehaviour
     private LevelController levelController;
     private Grid myGrid;
     private Grid levelGrid;
-    private Vector3 desiredPos;
+    public Vector3 desiredPos;
     public bool doomed;
     private void Awake()
     {
@@ -74,5 +74,9 @@ public class Block : MonoBehaviour
     {
         yield return new WaitForSeconds(.5f);
         Destroy(gameObject);
+    }
+    public Vector3Int GetGridPos()
+    {
+        return levelGrid.WorldToCell(desiredPos);
     }
 }
